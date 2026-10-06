@@ -29,8 +29,10 @@ All diese Daten bleiben auf deinem Gerät, sind nicht Teil von Android-Cloud-Sic
 ### 4. Weitergabe an Dritte
 VaultInk überträgt keine Daten an den Entwickler oder an Dritte. Wird dein Vault von einer anderen App oder einem Dienst synchronisiert (z. B. Obsidian Sync, Syncthing oder ein Cloud-Speicher), gilt für die synchronisierten Dateien die Datenschutzerklärung dieser App bzw. dieses Dienstes.
 
+Scannen: Die Funktion „Scannen“ nutzt den Dokumentenscanner der Google Play-Dienste (Google ML Kit). Kamerabild und Seitenerkennung werden auf deinem Gerät verarbeitet; die Bilder werden dabei nicht an Google übertragen. Der Scanner wird von den Google Play-Diensten bereitgestellt und beim ersten Gebrauch von diesen heruntergeladen; für die Google Play-Dienste gelten die Datenschutzbestimmungen von Google (policies.google.com/privacy). VaultInk selbst erhält nur das fertige PDF und hat weiterhin keinen Internetzugriff.
+
 ### 5. Berechtigungen
-VaultInk fordert keine Berechtigungen für Speicher, Netzwerk, Standort, Kamera, Mikrofon oder Kontakte an. Den Zugriff auf deinen Vault-Ordner erteilst du selbst über die Dateiauswahl des Systems; du kannst ihn jederzeit widerrufen, indem du einen anderen Ordner wählst oder die App deinstallierst.
+VaultInk fordert keine Berechtigungen für Speicher, Netzwerk, Standort, Kamera, Mikrofon oder Kontakte an. Den Zugriff auf deinen Vault-Ordner erteilst du selbst über die Dateiauswahl des Systems; du kannst ihn jederzeit widerrufen, indem du einen anderen Ordner wählst oder die App deinstallierst. Beim Scannen verwendet der Scanner der Google Play-Dienste die Kamera mit deren eigener Berechtigung.
 
 ### 6. Kinder
 VaultInk erhebt keine Daten – auch nicht von Kindern.
@@ -64,8 +66,10 @@ All of this data stays on your device, is not included in Android cloud backups 
 ### 4. Sharing with third parties
 VaultInk does not transmit any data to the developer or to third parties. If your vault is synchronized by another app or service (for example Obsidian Sync, Syncthing or a cloud drive), that app's or service's own privacy policy applies to the synchronized files.
 
+Scanning: the “Scan” feature uses the document scanner of Google Play services (Google ML Kit). The camera image and page detection are processed on your device; the images are not sent to Google. The scanner is provided by Google Play services and downloaded by them on first use; Google's privacy policy applies to Google Play services (policies.google.com/privacy). VaultInk itself only receives the finished PDF and still has no internet access.
+
 ### 5. Permissions
-VaultInk does not request storage, network, location, camera, microphone or contact permissions. Access to your vault folder is granted by you through the system file picker and can be revoked at any time by choosing another folder or uninstalling the app.
+VaultInk does not request storage, network, location, camera, microphone or contact permissions. Access to your vault folder is granted by you through the system file picker and can be revoked at any time by choosing another folder or uninstalling the app. When scanning, the Google Play services scanner uses the camera with its own permission.
 
 ### 6. Children
 VaultInk does not collect any data, including from children.
