@@ -4,7 +4,7 @@ title: VaultInk – Datenschutz / Privacy
 
 # VaultInk – Datenschutzerklärung / Privacy Policy
 
-Stand / As of: 30. September 2026
+Stand / As of: 6. Oktober 2026 / 6 October 2026
 
 [Deutsch](#deutsch) · [English](#english)
 
@@ -22,6 +22,7 @@ Du wählst über die Android-Dateiauswahl einen Ordner (deinen Obsidian-Vault). 
 - Einstellungen (z. B. Stift, Farben, Speichermodus, ausgeblendete Ordner) werden im privaten Speicher der App abgelegt.
 - Bevor VaultInk ein PDF in einer Sitzung zum ersten Mal verändert, wird eine Sicherungskopie dieses PDFs im eigenen Ordner der App gespeichert (`Android/data/…/files/backups`). Sicherungen werden nach 30 Tagen automatisch gelöscht, bei Erreichen von Speichergrenzen auch früher.
 - Noch nicht gespeicherte Notizen werden in einer privaten Notfallkopie festgehalten, damit sie bei einem unerwarteten Beenden der App nicht verloren gehen. Sie wird gelöscht, sobald die Notizen gespeichert oder verworfen werden.
+- Ein Fehlerprotokoll (z. B. fehlgeschlagenes Speichern, App-Abstürze; mit Dateinamen, aber ohne Inhalte deiner Dateien) wird im privaten Speicher der App geführt. Es verlässt das Gerät nur, wenn du es selbst in den Einstellungen teilst.
 
 All diese Daten bleiben auf deinem Gerät, sind nicht Teil von Android-Cloud-Sicherungen und werden beim Deinstallieren der App entfernt.
 
@@ -56,6 +57,7 @@ You choose one folder (your Obsidian vault) via the Android file picker. VaultIn
 - Settings (for example pen, colors, save mode, hidden folders) are stored in the app's private storage.
 - Before VaultInk changes a PDF for the first time in a session, it stores a backup copy of that PDF in the app's own folder (`Android/data/…/files/backups`). Backups are deleted automatically after 30 days, or earlier if storage limits are reached.
 - Notes that have not been saved yet are kept in a private emergency copy so they are not lost if the app is closed unexpectedly. It is deleted as soon as the notes are saved or discarded.
+- An error log (for example failed saves, app crashes; with file names but without the contents of your files) is kept in the app's private storage. It only leaves the device if you share it yourself from the settings.
 
 All of this data stays on your device, is not included in Android cloud backups and is removed when you uninstall the app.
 
