@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="VaultInk closed beta: handwrite on the PDFs in your Obsidian vault. How to join and what to try.">
+<title>VaultInk Beta Testing</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Caveat:wght@600&display=swap">
+<style>
+/* Base (the artifact viewer added these). */
+body { margin: 0; }
+[hidden] { display: none !important; }
+img { max-width: 100%; }
+
+/* Layout: one reading column like a single PDF page, with handwritten margin notes in the accent ink. */
+:root {
+  --bg: #F6F4FB;
+  --sheet: #FFFFFF;
+  --fg: #1F1B2E;
+  --muted: #5E5873;
+  --line: #E2DDF0;
+  --accent: #6F4FE0;
+  --accent-ink: #FFFFFF;
+  --mark: #FFE97A;
+  --ok: #2E7D32;
+  --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-hand: "Caveat", "Segoe Print", cursive;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #17151F; --sheet: #211E2C; --fg: #ECE9F6; --muted: #A9A3BF; --line: #34304A;
+    --accent: #A890FF; --accent-ink: #17151F; --mark: #8A7A1C; --ok: #7BC67E; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #17151F; --sheet: #211E2C; --fg: #ECE9F6; --muted: #A9A3BF; --line: #34304A;
+  --accent: #A890FF; --accent-ink: #17151F; --mark: #8A7A1C; --ok: #7BC67E; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font: 17px/1.6 var(--font-body); padding-inline: 16px; padding-block: 28px 56px; }
+.wrap { max-width: 760px; margin: 0 auto; display: grid; gap: 22px; }
+header.top { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.brand { font: 800 20px var(--font-display); letter-spacing: 0.01em; display: flex; align-items: center; gap: 10px; }
+.brand .dot { width: 26px; height: 26px; border-radius: 8px; background: linear-gradient(135deg, #9B7BFF, #3D2E6B); display: inline-block; }
+.lang { display: inline-flex; border: 1px solid var(--line); border-radius: 999px; overflow: hidden; }
+.lang button { font: 700 14px var(--font-body); border: 0; background: transparent; color: var(--muted); padding: 6px 14px; cursor: pointer; }
+.lang button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); }
+.lang button:focus-visible, .copy:focus-visible, a:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.sheet { background: var(--sheet); border: 1px solid var(--line); border-radius: 14px; padding: clamp(20px, 5vw, 40px); display: grid; gap: 18px; min-width: 0; }
+h1 { font: 800 clamp(32px, 6vw, 46px)/1.08 var(--font-display); margin: 0; text-wrap: balance; }
+h2 { font: 600 24px/1.2 var(--font-display); margin: 6px 0 0; text-wrap: balance; }
+p { margin: 0; max-width: 65ch; }
+.lead { font-size: 19px; color: var(--muted); }
+mark { background: linear-gradient(transparent 18%, var(--mark) 18%, var(--mark) 88%, transparent 88%); color: inherit; padding: 0 2px; }
+.note { font: 600 22px/1.2 var(--font-hand); color: var(--accent); transform: rotate(-1.5deg); }
+ul.plain { margin: 0; padding-left: 1.2em; display: grid; gap: 6px; }
+ol.steps { margin: 0; padding: 0; list-style: none; counter-reset: s; display: grid; gap: 14px; }
+ol.steps li { counter-increment: s; display: grid; grid-template-columns: 36px 1fr; gap: 12px; align-items: start; }
+ol.steps li::before { content: counter(s); font: 800 18px/36px var(--font-display); text-align: center; width: 36px; height: 36px; border-radius: 50%; border: 2px solid var(--accent); color: var(--accent); }
+ol.steps li > div { min-width: 0; display: grid; gap: 4px; }
+a { color: var(--accent); font-weight: 700; overflow-wrap: anywhere; }
+.btn { display: inline-block; background: var(--accent); color: var(--accent-ink); text-decoration: none; padding: 8px 16px; border-radius: 999px; justify-self: start; }
+.tasks { display: grid; gap: 8px; margin: 0; padding: 0; list-style: none; }
+.tasks label { display: grid; grid-template-columns: 22px 1fr; gap: 10px; align-items: start; cursor: pointer; padding: 8px 10px; border-radius: 10px; border: 1px solid var(--line); }
+.tasks input { width: 18px; height: 18px; margin-top: 4px; accent-color: var(--accent); }
+.tasks input:checked + span { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--accent); }
+.progress { font-size: 14px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.mail { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.mail code { font: 700 17px var(--font-body); background: var(--bg); border: 1px solid var(--line); border-radius: 8px; padding: 4px 10px; user-select: all; }
+.copy { font: 700 14px var(--font-body); border: 1px solid var(--accent); background: transparent; color: var(--accent); border-radius: 999px; padding: 5px 12px; cursor: pointer; }
+.small { font-size: 14px; color: var(--muted); }
+footer { font-size: 13px; color: var(--muted); text-align: center; display: grid; gap: 4px; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand"><span class="dot" aria-hidden="true"></span>VaultInk</div>
+    <div class="lang" role="group" aria-label="Language">
+      <button type="button" id="lang-en" data-set="en" aria-pressed="true">EN</button>
+      <button type="button" id="lang-de" data-set="de" aria-pressed="false">DE</button>
+    </div>
+  </header>
+
+  <!-- ================= ENGLISH ================= -->
+  <div data-lang="en" class="wrap">
+    <section class="sheet">
+      <p class="note">closed beta · 14 days</p>
+      <h1>Handwrite on the PDFs in your Obsidian vault</h1>
+      <p class="lead">VaultInk is an Android app for writing on PDFs with a stylus. Your notes go <mark>straight into the PDF file in your vault</mark> as real annotations, so Obsidian and every other PDF app shows them. I'm looking for testers before the public release.</p>
+      <ul class="plain">
+        <li>No copies, no import or export: the app edits the file where it lives.</li>
+        <li>Works offline. The app has no internet permission, no ads, no tracking, no account.</li>
+        <li>Free. English and German.</li>
+      </ul>
+    </section>
+
+    <section class="sheet">
+      <h2>What you need</h2>
+      <ul class="plain">
+        <li>An Android tablet with a stylus is ideal (for example a Galaxy Tab S with S Pen). Phones work too, and a finger only scrolls and zooms.</li>
+        <li>Android 10 or newer.</li>
+        <li>A folder with PDFs on the device, ideally your Obsidian vault (synced with Obsidian Sync, Syncthing or similar). Any folder works.</li>
+      </ul>
+    </section>
+
+    <section class="sheet">
+      <h2>How to join</h2>
+      <ol class="steps">
+        <li><div><p><strong>Join the tester group</strong> with the Google account you use in the Play Store.</p>
+          <a class="btn" href="https://groups.google.com/g/vaultink-testers">Join the group</a></div></li>
+        <li><div><p><strong>Become a tester</strong> on Google Play's test page (it opens once you're in the group).</p>
+          <a class="btn" href="https://play.google.com/apps/testing/at.brunchnet.vaultink">Open the test page</a></div></li>
+        <li><div><p><strong>Install VaultInk</strong> from the Play Store.</p>
+          <a class="btn" href="https://play.google.com/store/apps/details?id=at.brunchnet.vaultink">VaultInk on Google Play</a></div></li>
+        <li><div><p><strong>Keep it installed for 14 days</strong> and open it now and then. Google only lets a new app go public after at least 12 testers stayed in the test for 14 days in a row, and it checks that the app is actually used.</p></div></li>
+      </ol>
+    </section>
+
+    <section class="sheet">
+      <h2>Things to try</h2>
+      <p class="small">Tick them off as you go. The list is saved in this browser only.</p>
+      <ul class="tasks" id="tasks-en"></ul>
+      <p class="progress" id="progress-en"></p>
+      <p class="note">tip: start with a copy of a PDF you care about</p>
+      <p>VaultInk backs up every PDF before it changes it (Settings → Backups), checks each file after writing and merges changes from other devices. It's still a beta, so a test copy is a good idea for your first minutes.</p>
+    </section>
+
+    <section class="sheet">
+      <h2>Feedback</h2>
+      <p>The easiest way: in the app, <strong>Settings → About VaultInk → Send feedback</strong>. It opens a mail with your device details and the app's error log attached. Or write to:</p>
+      <div class="mail"><code id="mail-en">vaultink@brunchnet.at</code><button type="button" class="copy" data-copy="mail-en">Copy</button></div>
+      <p>Helpful: what you did, what you expected, what happened, and a screenshot if you can. Ideas and "this felt odd" are just as welcome as bugs.</p>
+    </section>
+  </div>
+
+  <!-- ================= DEUTSCH ================= -->
+  <div data-lang="de" class="wrap" hidden>
+    <section class="sheet">
+      <p class="note">geschlossene Beta · 14 Tage</p>
+      <h1>Handschrift direkt in den PDFs deines Obsidian-Vaults</h1>
+      <p class="lead">VaultInk ist eine Android-App, mit der du mit dem Stift in PDFs schreibst. Deine Notizen landen <mark>direkt in der PDF-Datei in deinem Vault</mark> als echte Anmerkungen, so siehst du sie auch in Obsidian und jedem anderen PDF-Programm. Vor der Veröffentlichung suche ich Tester.</p>
+      <ul class="plain">
+        <li>Keine Kopien, kein Import oder Export: Die App bearbeitet die Datei dort, wo sie liegt.</li>
+        <li>Funktioniert offline. Keine Internet-Berechtigung, keine Werbung, kein Tracking, kein Konto.</li>
+        <li>Kostenlos. Deutsch und Englisch.</li>
+      </ul>
+    </section>
+
+    <section class="sheet">
+      <h2>Was du brauchst</h2>
+      <ul class="plain">
+        <li>Ideal ist ein Android-Tablet mit Stift (z. B. ein Galaxy Tab S mit S Pen). Handys gehen auch, der Finger scrollt und zoomt nur.</li>
+        <li>Android 10 oder neuer.</li>
+        <li>Einen Ordner mit PDFs auf dem Gerät, am besten deinen Obsidian-Vault (synchronisiert mit Obsidian Sync, Syncthing o. Ä.). Jeder Ordner geht.</li>
+      </ul>
+    </section>
+
+    <section class="sheet">
+      <h2>So machst du mit</h2>
+      <ol class="steps">
+        <li><div><p><strong>Tritt der Testergruppe bei</strong>, mit dem Google-Konto, das du im Play Store verwendest.</p>
+          <a class="btn" href="https://groups.google.com/g/vaultink-testers">Zur Gruppe</a></div></li>
+        <li><div><p><strong>Werde Tester</strong> auf der Testseite von Google Play (sie öffnet sich, sobald du in der Gruppe bist).</p>
+          <a class="btn" href="https://play.google.com/apps/testing/at.brunchnet.vaultink">Testseite öffnen</a></div></li>
+        <li><div><p><strong>Installiere VaultInk</strong> aus dem Play Store.</p>
+          <a class="btn" href="https://play.google.com/store/apps/details?id=at.brunchnet.vaultink">VaultInk bei Google Play</a></div></li>
+        <li><div><p><strong>Lass die App 14 Tage installiert</strong> und öffne sie ab und zu. Google lässt eine neue App erst an die Öffentlichkeit, wenn mindestens 12 Tester 14 Tage am Stück dabei waren, und prüft, ob sie wirklich benutzt wird.</p></div></li>
+      </ol>
+    </section>
+
+    <section class="sheet">
+      <h2>Was du ausprobieren kannst</h2>
+      <p class="small">Zum Abhaken. Die Liste wird nur in diesem Browser gespeichert.</p>
+      <ul class="tasks" id="tasks-de"></ul>
+      <p class="progress" id="progress-de"></p>
+      <p class="note">Tipp: fang mit einer Kopie eines wichtigen PDFs an</p>
+      <p>VaultInk sichert jedes PDF, bevor es verändert wird (Einstellungen → Sicherungen), prüft jede Datei nach dem Schreiben und führt Änderungen von anderen Geräten zusammen. Es ist trotzdem eine Beta, für die ersten Minuten ist eine Testkopie eine gute Idee.</p>
+    </section>
+
+    <section class="sheet">
+      <h2>Feedback</h2>
+      <p>Am einfachsten in der App: <strong>Einstellungen → Über VaultInk → Feedback senden</strong>. Das öffnet eine Mail mit Gerätedaten und dem Fehlerprotokoll im Anhang. Oder schreib an:</p>
+      <div class="mail"><code id="mail-de">vaultink@brunchnet.at</code><button type="button" class="copy" data-copy="mail-de">Kopieren</button></div>
+      <p>Hilfreich: was du gemacht hast, was du erwartet hast, was passiert ist, und wenn möglich ein Screenshot. Ideen und „das fühlte sich komisch an“ sind genauso willkommen wie Fehler.</p>
+    </section>
+  </div>
+
+  <footer>
+    <span>VaultInk is an independent app by Manuel Brandstätter (Austria) and is not affiliated with Obsidian. Obsidian is a trademark of Dynalist Inc.</span>
+    <span>Privacy: the app collects no data. <a href="../">Privacy policy</a></span>
+  </footer>
+</div>
+
+<script>
+const TASKS = {
+  en: [
+    "Pick your vault folder and open a PDF",
+    "Write with the pen, then open the same PDF in Obsidian: your notes are there",
+    "Highlight a line of text with the highlighter (it snaps to the text)",
+    "Scribble over a word to erase it, then undo",
+    "Circle some notes, tap Select, then rotate or resize them",
+    "Draw a circle or line and hold the pen still at the end: it snaps to a clean shape",
+    "Page overview (grid icon): move a page, add a margin for notes",
+    "Put the ruler down and draw along its edge",
+    "Scan a sheet of paper into a new PDF (library → Scan)",
+    "⋮ → Export highlights to Obsidian, then open the note",
+    "Optional: set the S Pen button to the tool wheel (Settings → Pen)"
+  ],
+  de: [
+    "Vault-Ordner wählen und ein PDF öffnen",
+    "Mit dem Stift schreiben, dann dasselbe PDF in Obsidian öffnen: Die Notizen sind da",
+    "Eine Textzeile mit dem Textmarker markieren (er rastet am Text ein)",
+    "Über ein Wort kritzeln, um es zu löschen, dann Rückgängig",
+    "Notizen einkreisen, „Auswählen“ tippen, dann drehen oder vergrößern",
+    "Kreis oder Linie zeichnen und am Ende den Stift kurz still halten: wird zur sauberen Form",
+    "Seitenübersicht (Raster-Symbol): Seite verschieben, Rand für Notizen anfügen",
+    "Lineal einblenden und an der Kante entlang zeichnen",
+    "Ein Blatt Papier als neues PDF scannen (Bibliothek → Scannen)",
+    "⋮ → Markierungen nach Obsidian exportieren, dann die Notiz öffnen",
+    "Optional: S-Pen-Taste aufs Werkzeugrad legen (Einstellungen → Stift)"
+  ]
+};
+const KEY = "vaultink-beta-tasks";
+function load() { try { return JSON.parse(localStorage.getItem(KEY) || "{}"); } catch (e) { return {}; } }
+function save(v) { try { localStorage.setItem(KEY, JSON.stringify(v)); } catch (e) {} }
+const done = load();
+for (const lang of ["en", "de"]) {
+  const list = document.getElementById("tasks-" + lang);
+  TASKS[lang].forEach((text, i) => {
+    const li = document.createElement("li");
+    const label = document.createElement("label");
+    const box = document.createElement("input");
+    box.type = "checkbox";
+    box.id = "task-" + lang + "-" + i;
+    box.checked = !!done[i];
+    box.addEventListener("change", () => { done[i] = box.checked; save(done); sync(); });
+    const span = document.createElement("span");
+    span.textContent = text;
+    label.append(box, span);
+    li.append(label);
+    list.append(li);
+  });
+}
+function sync() {
+  const n = TASKS.en.filter((_, i) => done[i]).length;
+  document.getElementById("progress-en").textContent = n + " of " + TASKS.en.length + " tried";
+  document.getElementById("progress-de").textContent = n + " von " + TASKS.de.length + " ausprobiert";
+  document.querySelectorAll('.tasks input').forEach(b => { const i = +b.id.split("-").pop(); b.checked = !!done[i]; });
+}
+sync();
+
+function setLang(lang) {
+  document.querySelectorAll("[data-lang]").forEach(el => { el.hidden = el.dataset.lang !== lang; });
+  document.querySelectorAll(".lang button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.set === lang)));
+  document.documentElement.lang = lang;
+  try { localStorage.setItem("vaultink-beta-lang", lang); } catch (e) {}
+}
+document.querySelectorAll(".lang button").forEach(b => b.addEventListener("click", () => setLang(b.dataset.set)));
+let initial = location.hash === "#de" ? "de" : location.hash === "#en" ? "en" : null;
+if (!initial) { try { initial = localStorage.getItem("vaultink-beta-lang"); } catch (e) {} }
+if (!initial) initial = (navigator.language || "").toLowerCase().startsWith("de") ? "de" : "en";
+setLang(initial);
+
+document.querySelectorAll(".copy").forEach(btn => btn.addEventListener("click", () => {
+  const el = document.getElementById(btn.dataset.copy);
+  const text = el.textContent;
+  const label = btn.textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = btn.dataset.copy.endsWith("de") ? "Kopiert" : "Copied";
+    setTimeout(() => { btn.textContent = label; }, 1600);
+  }).catch(() => {
+    const r = document.createRange(); r.selectNodeContents(el);
+    const s = getSelection(); s.removeAllRanges(); s.addRange(r);
+  });
+}));
+</script>
+
+</body>
+</html>
